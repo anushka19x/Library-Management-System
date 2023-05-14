@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX_BOOKS 100
+
+typedef struct {
+    char title[50];
+    char author[50];
+    int available;
+} Book;
+
+void print_books(Book* books, int num_books) {
+    printf("List of Books:\n");
+    printf("-----------------------------\n");
+    printf("Title\t\tAuthor\t\tAvailability\n");
+    printf("-----------------------------\n");
+    for (int i = 0; i < num_books; i++) {
+        printf("%s\t%s\t%d\n", books[i].title, books[i].author, books[i].available);
+    }
+}
+
+void issue_book(Book* books, int num_books) {
+    char title[50];
+    printf("Enter the title of the book to be issued: ");
+    scanf("%s", title);
+    for (int i = 0; i < num_books; i++) {
+        if (strcmp(books[i].title, title) == 0) {
+            if (books[i].available > 0) {
+                books[i].available--;
+                printf("Book issued successfully!\n");
+                return;
+            } else {
+                printf("Sorry, this book is not available for issue.\n");
+                return;
+            }
+        }
+    }
+    printf("Sorry, the requested book was not found in the library.\n");
+}
+
+void return_book(Book* books, int num_books) {
+    char title[50];
+    printf("Enter the title of the book to be returned: ");
+    scanf("%s", title);
+    for (int i = 0; i < num_books; i++) {
+        if (strcmp(books[i].title, title) == 0) {
+            books[i].available++;
+            printf("Book returned successfully!\n");
+            return;
+        }
+    }
+    printf("Sorry, the requested book was not found in the library.\n");
+}
+
+int main() {
+    Book books[MAX_BOOKS];
+    int num_books = 0;
+    while (1) {
+        printf("\nLibrary Management System\n");
+        printf("-----------------------------\n");
+        printf("1. Add Book\n");
+        printf("2. Issue Book\n");
+        printf("3. Return Book\n");
+        printf("4. List Books\n");
+        printf("5. Exit\n");
+        printf("-----------------------------\n");
+        int choice;
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1: {
+                if (num_books < MAX_BOOKS) {
+                    printf("\nEnter the book details:\n");
+                    printf("Title: ");
+                    scanf("%s", books[num_books].title);
+                    printf("Author: ");
+                    scanf("%s", books[num_books].author);
+                    printf("Availability: ");
+                    scanf("%d", &books[num_books].available);
+                    num_books++;
+                } else {
+                    printf("Sorry, the library is already full.\n");
+                }
+                break;
+            }
+            case 2: {
+                issue_book(books, num_books);
+                break;
+            }
+            case 3: {
+                return_book(books, num_books);
+                break;
+            }
+            case 4: {
+                print_books(books, num_books);
+                break;
+            }
+            case 5: {
+                exit(0);
+            }
+            default: {
+                printf("Invalid choice. Please try again.\n");
+                break;
+            }
+        }
+    }
+    return 0;
+}
